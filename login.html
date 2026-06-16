@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login</title>
+<title>Login Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
 body{
+  margin:0;
   background:#111827;
   display:flex;
   justify-content:center;
@@ -22,10 +22,14 @@ body{
 }
 
 .card{
-  width:350px;
+  width:380px;
   background:white;
   padding:30px;
   border-radius:12px;
+}
+
+h2{
+  margin-top:0;
 }
 
 input{
@@ -42,7 +46,7 @@ button{
 }
 
 </style>
-    
+
 </head>
 
 <body>
@@ -63,7 +67,7 @@ button{
   placeholder="Senha"
 />
 
-<button onclick="login()">
+<button id="btnLogin">
 Entrar
 </button>
 
@@ -71,32 +75,49 @@ Entrar
 
 <script>
 
-// const supabase = window.supabase.createClient( 'https://zuwnaejrihlhdmbwoirw.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1d25hZWpyaWhsaGRtYndvaXJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NDcxMzQsImV4cCI6MjA5MjEyMzEzNH0.Jr2YWcIxYr8naMdhwziEIWgGVWKTeLwqFnFglB8s5LA')
+const SUPABASE_URL =
+'https://zuwnaejrihlhdmbwoirw.supabase.co'
+
+const SUPABASE_ANON_KEY =
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1d25hZWpyaWhsaGRtYndvaXJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NDcxMzQsImV4cCI6MjA5MjEyMzEzNH0.Jr2YWcIxYr8naMdhwziEIWgGVWKTeLwqFnFglB8s5LA'
+
+const client =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+)
+
+document
+.getElementById('btnLogin')
+.addEventListener('click', login)
 
 async function login(){
 
   const email =
-    document.getElementById('email').value
+  document.getElementById('email').value
 
   const password =
-    document.getElementById('senha').value
+  document.getElementById('senha').value
 
-  const { error } =
-    await supabase.auth.signInWithPassword({
+  console.log('CLIENTE:')
+  console.log(client)
 
-      email,
-      password
+  const resultado =
+  await client.auth.signInWithPassword({
+    email,
+    password
+  })
 
-    })
+  console.log(resultado)
 
-  if(error){
+  if(resultado.error){
 
-    alert(error.message)
+    alert(resultado.error.message)
     return
 
   }
 
-  window.location.href = '/'
+  window.location.href='/'
 
 }
 
