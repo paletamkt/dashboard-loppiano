@@ -9,25 +9,44 @@ export async function onRequest(context) {
 
   try {
 
-    const { data, error } = await supabase
-      .from('metas_diarias')
-      .select('*')
-      .limit(1)
+    const tabelas = [
+      'vw_dashboard_resumo_mensal',
+      'vendas_horario',
+      'vendas_atendentes',
+      'produtos_vendidos',
+      'vendas_diarias',
+      'metas_diarias'
+    ]
 
-    return Response.json({
-      tabela: 'metas_diarias',
-      data,
-      error
-    })
+    const resultado = []
+
+    for (const tabela of tabelas) {
+
+      const { data, error } = await supabase
+        .from(tabela)
+        .select('*')
+        .limit(1)
+
+      resultado.push({
+        tabela,
+        linhas: data?.length || 0,
+        erro: error?.message || null
+      })
+    }
+
+    return Response.json(resultado)
 
   } catch (e) {
 
-    return Response.json({
-      message: e.message,
-      stack: e.stack
-    }, {
-      status: 500
-    })
+    return Response.json(
+      {
+        message: e.message,
+        stack: e.stack
+      },
+      {
+        status: 500
+      }
+    )
 
   }
 
