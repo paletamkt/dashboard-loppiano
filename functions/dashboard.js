@@ -1,24 +1,28 @@
-const testes = {}
+import { createClient } from '@supabase/supabase-js'
 
-for (const tabela of [
-  'vw_dashboard_resumo_mensal',
-  'vendas_horario',
-  'vendas_atendentes',
-  'produtos_vendidos',
-  'vendas_diarias',
-  'metas_diarias'
-]) {
+export async function onRequest(context) {
 
-  const { data, error } = await supabase
-    .from(tabela)
-    .select('*')
-    .limit(1)
+  try {
 
-  testes[tabela] = {
-    ok: !error,
-    erro: error?.message || null,
-    linhas: data?.length || 0
+    const supabase = createClient(
+      context.env.SUPABASE_URL,
+      context.env.SUPABASE_SERVICE_ROLE
+    )
+
+    return Response.json({
+      etapa: 'cliente criado'
+    })
+
+  } catch (e) {
+
+    return Response.json({
+      etapa: 'erro criar cliente',
+      erro: e.message,
+      stack: e.stack
+    }, {
+      status: 500
+    })
+
   }
-}
 
-return Response.json(testes)
+}
