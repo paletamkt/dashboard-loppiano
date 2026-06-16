@@ -50,8 +50,6 @@ async function buscarTudo(tabela, options = {}) {
   return todos
 }
 
-<!export async function handler() {>
-
 export async function onRequest() {
 
   try {
