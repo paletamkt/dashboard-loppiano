@@ -137,7 +137,7 @@ function entrar(){
 
 }
 
-function atualizar(){
+async function atualizar(){
 
   const operacao =
     document.getElementById('operacao').files[0]
@@ -145,18 +145,21 @@ function atualizar(){
   const metas =
     document.getElementById('metas').files[0]
 
-  const nomeOperacao =
-    operacao ? operacao.name : 'nenhum arquivo'
+  const formData = new FormData()
 
-  const nomeMetas =
-    metas ? metas.name : 'nenhum arquivo'
+  formData.append('operacao', operacao)
+  formData.append('metas', metas)
 
-  alert(
-    'Operação: ' +
-    nomeOperacao +
-    '\n\nMetas: ' +
-    nomeMetas
-  )
+  const resposta = await fetch('/importar', {
+    method: 'POST',
+    body: formData
+  })
+
+  const resultado = await resposta.json()
+
+  console.log(resultado)
+
+  alert(JSON.stringify(resultado, null, 2))
 
 }
 
