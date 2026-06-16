@@ -1,33 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+const testes = {}
 
-export async function onRequest(context) {
+for (const tabela of [
+  'vw_dashboard_resumo_mensal',
+  'vendas_horario',
+  'vendas_atendentes',
+  'produtos_vendidos',
+  'vendas_diarias',
+  'metas_diarias'
+]) {
 
-  const supabase = createClient(
-    context.env.SUPABASE_URL,
-    context.env.SUPABASE_SERVICE_ROLE
-  )
+  const { data, error } = await supabase
+    .from(tabela)
+    .select('*')
+    .limit(1)
 
-  try {
-
-    const { data, error } = await supabase
-      .from('vw_dashboard_resumo_mensal')
-      .select('*')
-      .limit(1)
-
-    return Response.json({
-      data,
-      error
-    })
-
-  } catch (e) {
-
-    return Response.json({
-      message: e.message,
-      stack: e.stack
-    }, {
-      status: 500
-    })
-
+  testes[tabela] = {
+    ok: !error,
+    erro: error?.message || null,
+    linhas: data?.length || 0
   }
-
 }
+
+return Response.json(testes)
