@@ -22,14 +22,16 @@ export async function onRequest(context) {
 
     for (const tabela of tabelas) {
 
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from(tabela)
-        .select('*')
-        .limit(1)
+        .select('*', {
+          count: 'exact',
+          head: true
+        })
 
       resultado.push({
         tabela,
-        linhas: data?.length || 0,
+        quantidade: count,
         erro: error?.message || null
       })
     }
@@ -40,7 +42,7 @@ export async function onRequest(context) {
 
     return Response.json(
       {
-        message: e.message,
+        erro: e.message,
         stack: e.stack
       },
       {
