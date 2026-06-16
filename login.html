@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+  background:#111827;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-family:Arial,sans-serif;
+}
+
+.card{
+  width:350px;
+  background:white;
+  padding:30px;
+  border-radius:12px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  box-sizing:border-box;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  cursor:pointer;
+}
+
+</style>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Loppiano Dashboard</h2>
+
+<input
+  id="email"
+  type="email"
+  placeholder="Email"
+/>
+
+<input
+  id="senha"
+  type="password"
+  placeholder="Senha"
+/>
+
+<button onclick="login()">
+Entrar
+</button>
+
+</div>
+
+<script>
+
+const supabase =
+window.supabase.createClient(
+'https://zuwnaejrihlhdmbwoirw.supabase.co',
+'SUA_ANON_KEY_AQUI'
+)
+
+async function login(){
+
+  const email =
+    document.getElementById('email').value
+
+  const password =
+    document.getElementById('senha').value
+
+  const { error } =
+    await supabase.auth.signInWithPassword({
+
+      email,
+      password
+
+    })
+
+  if(error){
+
+    alert(error.message)
+    return
+
+  }
+
+  window.location.href = '/'
+
+}
+
+</script>
+
+</body>
+</html>
