@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Administração</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administração - Loppiano Dashboard</title>
 
 <style>
+
 body{
-  font-family:Arial,sans-serif;
-  background:#111;
-  color:#fff;
+  margin:0;
+  padding:0;
+  background:#111827;
+  color:#ffffff;
+  font-family:Arial, Helvetica, sans-serif;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  min-height:100vh;
 }
 
 .card{
-  background:#1f1f1f;
+  width:420px;
+  background:#1f2937;
   padding:30px;
   border-radius:12px;
-  width:400px;
+  box-sizing:border-box;
 }
 
-input{
+h2{
+  margin-top:0;
+}
+
+input[type="password"],
+input[type="file"]{
   width:100%;
+  box-sizing:border-box;
   padding:12px;
   margin-top:10px;
   margin-bottom:20px;
@@ -34,52 +45,75 @@ input{
 button{
   width:100%;
   padding:12px;
+  border:none;
+  border-radius:8px;
   cursor:pointer;
+  font-size:16px;
 }
 
 #painel{
   display:none;
 }
+
+.info{
+  font-size:14px;
+  color:#d1d5db;
+  margin-bottom:20px;
+}
+
 </style>
 
 </head>
+
 <body>
 
 <div class="card">
 
-<div id="login">
+  <div id="login">
 
-<h2>Área Administrativa</h2>
+    <h2>Área Administrativa</h2>
 
-<input
-  type="password"
-  id="senha"
-  placeholder="Digite a senha"
-/>
+    <div class="info">
+      Digite a senha para acessar.
+    </div>
 
-<button onclick="entrar()">
-Entrar
-</button>
+    <input
+      type="password"
+      id="senha"
+      placeholder="Digite a senha"
+    >
 
-</div>
+    <button onclick="entrar()">
+      Entrar
+    </button>
 
-<div id="painel">
+  </div>
 
-<h2>Importação</h2>
+  <div id="painel">
 
-<p>Operação Mensal</p>
+    <h2>Importação de Dados</h2>
 
-<input type="file" id="operacao">
+    <p><strong>Operação Mensal</strong></p>
 
-<p>Metas</p>
+    <input
+      type="file"
+      id="operacao"
+      accept=".xlsx,.xls"
+    >
 
-<input type="file" id="metas">
+    <p><strong>Metas</strong></p>
 
-<button>
-Atualizar Dados
-</button>
+    <input
+      type="file"
+      id="metas"
+      accept=".xlsx,.xls"
+    >
 
-</div>
+    <button onclick="atualizar()">
+      Atualizar Dados
+    </button>
+
+  </div>
 
 </div>
 
@@ -87,18 +121,42 @@ Atualizar Dados
 
 function entrar(){
 
-  const senha = document.getElementById('senha').value
+  const senha =
+    document.getElementById('senha').value
 
   if(senha === 'loppiano123'){
 
-    document.getElementById('login').style.display='none'
-    document.getElementById('painel').style.display='block'
+    document.getElementById('login').style.display = 'none'
+    document.getElementById('painel').style.display = 'block'
 
   }else{
 
     alert('Senha inválida')
 
   }
+
+}
+
+function atualizar(){
+
+  const operacao =
+    document.getElementById('operacao').files[0]
+
+  const metas =
+    document.getElementById('metas').files[0]
+
+  const nomeOperacao =
+    operacao ? operacao.name : 'nenhum arquivo'
+
+  const nomeMetas =
+    metas ? metas.name : 'nenhum arquivo'
+
+  alert(
+    'Operação: ' +
+    nomeOperacao +
+    '\n\nMetas: ' +
+    nomeMetas
+  )
 
 }
 
