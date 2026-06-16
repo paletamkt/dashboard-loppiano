@@ -1,22 +1,34 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE
-)
+export async function onRequest(context) {
 
-export async function onRequest() {
+  const supabase = createClient(
+    context.env.SUPABASE_URL,
+    context.env.SUPABASE_SERVICE_ROLE
+  )
 
-  const { data, error } = await supabase
-    .from('vendas_horario')
-    .select('*')
-    .limit(1)
+  try {
 
-  return Response.json({
-    tabela: 'vendas_horario',
-    data,
-    error
-  })
+    const { data, error } = await supabase
+      .from('metas_diarias')
+      .select('*')
+      .limit(1)
+
+    return Response.json({
+      tabela: 'metas_diarias',
+      data,
+      error
+    })
+
+  } catch (e) {
+
+    return Response.json({
+      message: e.message,
+      stack: e.stack
+    }, {
+      status: 500
+    })
+
+  }
 
 }
-
