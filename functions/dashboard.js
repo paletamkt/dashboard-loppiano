@@ -6,3 +6,4 @@ return Response.json({
   etapa: 'resumoMensal',
   qtd: resumoMensal.length
 })
+
