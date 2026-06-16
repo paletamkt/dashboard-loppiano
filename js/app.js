@@ -386,31 +386,41 @@ function bindSubtabGroup(prefixo, datasetKey) {
 }
 
 async function carregarDados() {
- try {
- if ($('status')) $('status').textContent = 'Carregando...'
+  try {
+    const status = document.getElementById('status')
 
- const res = await fetch('/.netlify/functions/dashboard')
- const json = await res.json()
+    if (status) status.textContent = 'Carregando...'
 
- DATA = {
- resumo_mensal: json.resumo_mensal || [],
- horarios: json.horarios || [],
- garcons: json.garcons || [],
- produtos: json.produtos || [],
- vendas_diarias: json.vendas_diarias || [],
- metas_diarias: json.metas_diarias || []
- }
+    const res = await fetch('/.netlify/functions/dashboard')
 
- montarFiltroPeriodo()
- renderTudo()
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`)
+    }
 
- if ($('status')) {
- $('status').textContent = `${DATA.resumo_mensal.length} per—odos`
- }
- } catch (error) {
- console.error(error)
- if ($('status')) $('status').textContent = 'Erro'
- }
+    const json = await res.json()
+
+    DATA = {
+      resumo_mensal: json.resumo_mensal || [],
+      horarios: json.horarios || [],
+      garcons: json.garcons || [],
+      produtos: json.produtos || [],
+      vendas_diarias: json.vendas_diarias || [],
+      metas_diarias: json.metas_diarias || []
+    }
+
+    montarFiltroPeriodo()
+    renderTudo()
+
+    if (status) {
+      status.textContent = `${DATA.resumo_mensal.length} períodos`
+    }
+
+  } catch (error) {
+    console.error('Erro ao carregar dados:', error)
+
+    const status = document.getElementById('status')
+    if (status) status.textContent = 'Erro'
+  }
 }
 
 function montarFiltroPeriodo() {
