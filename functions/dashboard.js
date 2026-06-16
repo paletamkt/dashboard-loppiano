@@ -10,12 +10,12 @@ export async function onRequest(context) {
   try {
 
     const { data, error } = await supabase
-      .from('vendas_horario')
+      .from('vendas_atendentes')
       .select('*')
       .limit(1)
 
     return Response.json({
-      tabela: 'vendas_horario',
+      tabela: 'vendas_atendentes',
       data,
       error
     })
