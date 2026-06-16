@@ -391,7 +391,7 @@ async function carregarDados() {
 
     if (status) status.textContent = 'Carregando...'
 
-    const res = await fetch('/.netlify/functions/dashboard')
+    const res = await fetch('/dashboard')
 
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`)
