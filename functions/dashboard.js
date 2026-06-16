@@ -9,26 +9,54 @@ export async function onRequest(context) {
 
   try {
 
-    const { data: produtos, error } = await supabase
-      .from('produtos_vendidos')
-      .select('*')
+    const [
+      resumoMensal,
+      horarios,
+      garcons,
+      produtos,
+      diario,
+      metasDiarias
+    ] = await Promise.all([
 
-    if (error) {
-      throw error
-    }
+      supabase
+        .from('vw_dashboard_resumo_mensal')
+        .select('*'),
 
-    const json = JSON.stringify(produtos)
+      supabase
+        .from('vendas_horario')
+        .select('*'),
+
+      supabase
+        .from('vendas_atendentes')
+        .select('*'),
+
+      supabase
+        .from('produtos_vendidos')
+        .select('*'),
+
+      supabase
+        .from('vendas_diarias')
+        .select('*'),
+
+      supabase
+        .from('metas_diarias')
+        .select('*')
+
+    ])
 
     return Response.json({
-      registros: produtos.length,
-      tamanho_bytes: json.length,
-      tamanho_mb: (json.length / 1024 / 1024).toFixed(2)
+      resumo_mensal: resumoMensal.data || [],
+      horarios: horarios.data || [],
+      garcons: garcons.data || [],
+      produtos: produtos.data || [],
+      vendas_diarias: diario.data || [],
+      metas_diarias: metasDiarias.data || []
     })
 
   } catch (error) {
 
     return Response.json({
-      error: error.message
+      erro: error.message
     }, {
       status: 500
     })
