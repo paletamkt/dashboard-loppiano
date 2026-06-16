@@ -1,35 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+const resumoMensal = await buscarTudo(
+  'vw_dashboard_resumo_mensal'
+)
 
-export async function onRequest(context) {
-
-  const supabase = createClient(
-    context.env.SUPABASE_URL,
-    context.env.SUPABASE_SERVICE_ROLE
-  )
-
-  try {
-
-    const { data, error } = await supabase
-      .from('metas_diarias')
-      .select('*')
-      .limit(1)
-
-    return Response.json({
-      tabela: 'metas_diarias',
-      data,
-      error
-    })
-
-  } catch (e) {
-
-    return Response.json({
-      message: e.message,
-      stack: e.stack
-    }, {
-      status: 500
-    })
-
-  }
-
-}
-
+return Response.json({
+  etapa: 'resumoMensal',
+  qtd: resumoMensal.length
+})
