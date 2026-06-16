@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+ <title>Loppiano Pizza — Dashboard V2</title>
+
+ <link rel="stylesheet" href="./css/style.css" />
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="hdr">
+ <div>
+ <h1>Loppiano Pizza</h1>
+ <p id="hdr-sub">Dashboard Operacional</p>
+ </div>
+
+ <div class="hdr-actions">
+ <select id="periodoGlobal" class="select"></select>
+ <span id="status" class="badge">Carregando...</span>
+ </div>
+</header>
+
+<main class="wrap">
+
+ <nav class="tabs">
+ <button class="tab active" data-tab="metas"> Metas</button>
+ <button class="tab" data-tab="dia"> Por Dia da Semana</button>
+ <button class="tab" data-tab="canais"> Delivery vs Salão</button>
+ <button class="tab" data-tab="horario"> Horário</button>
+ <button class="tab" data-tab="garcons"> Garçons</button>
+ <button class="tab" data-tab="cardapio"> Cardápio & Grupos</button>
+ <button class="tab" data-tab="comparar"> Comparar Períodos</button>
+ <button class="tab" data-tab="insights"> Insights Gerais</button>
+ </nav>
+
+ <!-- METAS -->
+ <section id="sec-metas" class="section active">
+
+ <div class="section-head">
+ <div>
+ <h2>Metas</h2>
+ <p>Realizado vs meta, diário, canais e histórico</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoMetas">Mês da aba</label>
+ <select id="periodoMetas" class="select"></select>
+ </div>
+
+ <div class="subtabs">
+ <button class="subtab" data-metas-tab="diaria">Análise Diária</button>
+ <button class="subtab" data-metas-tab="canais">Salão vs Delivery</button>
+ <button class="subtab active" data-metas-tab="visao">Visão Mensal</button>
+ <button class="subtab" data-metas-tab="historico">Histórico Geral</button>
+ </div>
+
+ <div id="metas-visao" class="subsection active">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Faturamento Real</span><strong id="kpi-fat">—</strong></div>
+ <div class="kpi"><span>Meta Total</span><strong id="kpi-meta">—</strong></div>
+ <div class="kpi green"><span>% Meta</span><strong id="kpi-pct">—</strong></div>
+ <div class="kpi"><span>Pessoas Reais</span><strong id="kpi-pessoas">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3>Meta vs Realizado</h3>
+ <canvas id="chartMetas"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3>SalÃo vs Delivery</h3>
+ <canvas id="chartCanais"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Resumo mensal</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Período</th>
+ <th>Realizado</th>
+ <th>Meta</th>
+ <th>% Meta</th>
+ <th>Salão</th>
+ <th>Delivery</th>
+ <th>Pessoas</th>
+ <th>Atendimentos</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyResumo"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="metas-diaria" class="subsection">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Melhor Dia</span><strong id="meta-dia-top">—</strong></div>
+ <div class="kpi green"><span>Fat. Melhor Dia</span><strong id="meta-dia-fat">—</strong></div>
+ <div class="kpi"><span>Média Diária</span><strong id="meta-dia-media">—</strong></div>
+ <div class="kpi"><span>Dias no Filtro</span><strong id="meta-dia-qtd">—</strong></div>
+ </div>
+
+       <div class="kpi-grid">
+        <div class="kpi red"><span>Faturamento no Mês</span><strong id="meta-dia-fat-realizado">—</strong></div>
+        <div class="kpi green"><span>Meta Prevista</span><strong id="meta-dia-meta-prevista">—</strong></div>
+        <div class="kpi"><span>% Atingido</span><strong id="meta-dia-pct-atingido">—</strong></div>
+        <div class="kpi"><span>Dias Corridos</span><strong id="meta-dia-dias-corridos">—</strong></div>
+      </div>
+
+<div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Faturamento diário vs Meta</h3>
+ <canvas id="chartMetaDiariaFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>Acumulado real vs Meta acumulada</h3>
+ <canvas id="chartMetaDiariaComparativo"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>Pessoas por dia</h3>
+ <canvas id="chartMetaDiariaPessoas"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Tabela diária</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Data</th>
+ <th>Faturamento</th>
+ <th>Meta do Dia</th>
+ <th>% da Meta</th>
+ <th>Acumulado</th>
+ <th>Meta Acumulada</th>
+ <th>% Acum.</th>
+ <th>Pessoas</th>
+ <th>Ticket</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyMetaDiaria"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="metas-canais" class="subsection">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Delivery</span><strong id="meta-canal-delivery">—</strong></div>
+ <div class="kpi green"><span>Salão</span><strong id="meta-canal-salao">—</strong></div>
+ <div class="kpi"><span>% Delivery</span><strong id="meta-canal-delivery-pct">—</strong></div>
+ <div class="kpi"><span>% Salão</span><strong id="meta-canal-salao-pct">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-compact">
+ <h3>Participação</h3>
+ <canvas id="chartMetaCanaisPizza"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>Comparativo</h3>
+ <canvas id="chartMetaCanaisBar"></canvas>
+ </div>
+ </div>
+ </div>
+
+ <div id="metas-historico" class="subsection">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Maior Mês</span><strong id="hist-maior-mes">—</strong></div>
+ <div class="kpi green"><span>Fat. Maior Mês</span><strong id="hist-maior-fat">—</strong></div>
+ <div class="kpi"><span>Média Mensal</span><strong id="hist-media">—</strong></div>
+ <div class="kpi"><span>Períodos</span><strong id="hist-periodos">—</strong></div>
+ </div>
+
+ <div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Evolução histórica</h3>
+ <canvas id="chartHistoricoFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>% Meta ao longo do tempo</h3>
+ <canvas id="chartHistoricoMeta"></canvas>
+ </div>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- DIA DA SEMANA -->
+ <section id="sec-dia" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Por Dia da Semana</h2>
+ <p>Visão geral e evolução por dia específico</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoDiaSemana">Mês da aba</label>
+ <select id="periodoDiaSemana" class="select"></select>
+ </div>
+
+ <div class="subtabs">
+ <button class="subtab active" data-dia-tab="geral">Visão Geral</button>
+ <button class="subtab" data-dia-tab="detalhe">Análise por Dia</button>
+ </div>
+
+ <div id="dia-geral" class="subsection active">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Melhor Dia</span><strong id="dia-melhor">—</strong></div>
+ <div class="kpi green"><span>Fat. Médio</span><strong id="dia-fat-medio">—</strong></div>
+ <div class="kpi"><span>Pessoas</span><strong id="dia-pessoas">—</strong></div>
+ <div class="kpi"><span>Ticket</span><strong id="dia-ticket">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3>Faturamento médio por dia</h3>
+ <canvas id="chartDiaSemanaFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3>Ticket Médio</h3>
+ <canvas id="chartDiaSemanaTicket"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Tabela semanal</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Dia</th>
+ <th>Faturamento</th>
+ <th>Pessoas</th>
+ <th>Ticket</th>
+ <th>Ocorrências</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyDiaSemana"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="dia-detalhe" class="subsection">
+ <div class="toolbar">
+ <select id="selectDiaSemana" class="select">
+ <option value="Segunda">Segunda</option>
+ <option value="Terça">Terça</option>
+ <option value="Quarta">Quarta</option>
+ <option value="Quinta">Quinta</option>
+ <option value="Sexta">Sexta</option>
+ <option value="Sábado">Sábado</option>
+ <option value="Domingo">Domingo</option>
+ </select>
+ </div>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Faturamento Total</span><strong id="dia-det-fat">—</strong></div>
+ <div class="kpi green"><span>Faturamento Médio</span><strong id="dia-det-fat-medio">—</strong></div>
+ <div class="kpi"><span>Pessoas Médias</span><strong id="dia-det-pessoas">—</strong></div>
+ <div class="kpi"><span>Ticket Médio</span><strong id="dia-det-ticket">—</strong></div>
+ </div>
+
+ <div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Evolução do Dia</h3>
+ <canvas id="chartDiaDetalheFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>Pessoas no Dia</h3>
+ <canvas id="chartDiaDetalhePessoas"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Ocorrências do dia selecionado</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Data</th>
+ <th>Faturamento</th>
+ <th>Pessoas</th>
+ <th>Ticket</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyDiaDetalhe"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- CANAIS -->
+ <section id="sec-canais" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Delivery vs Salão</h2>
+ <p>Participação, evolução e tabela por canal</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoCanais">Mês da aba</label>
+ <select id="periodoCanais" class="select"></select>
+ </div>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Faturamento Delivery</span><strong id="canal-delivery-fat">—</strong></div>
+ <div class="kpi green"><span>Faturamento Salão</span><strong id="canal-salao-fat">—</strong></div>
+ <div class="kpi"><span>% Delivery</span><strong id="canal-delivery-pct">—</strong></div>
+ <div class="kpi"><span>% Salão</span><strong id="canal-salao-pct">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3>Evolução por canal</h3>
+ <canvas id="chartCanaisLinha"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3>Composição</h3>
+ <canvas id="chartCanaisPizza"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Tabela de canais</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Peíodo</th>
+ <th>Salão</th>
+ <th>Delivery</th>
+ <th>Total</th>
+ <th>% Salão</th>
+ <th>% Delivery</th>
+ <th>Pessoas</th>
+ <th>Atendimentos</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyCanais"></tbody>
+ </table>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- HOR�RIO -->
+ <section id="sec-horario" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Horário</h2>
+ <p>Visão geral e evolução por hora específica</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoHorario">Mês da aba</label>
+ <select id="periodoHorario" class="select"></select>
+ </div>
+
+ <div class="subtabs">
+ <button class="subtab active" data-hora-tab="geral">Visão Geral</button>
+ <button class="subtab" data-hora-tab="detalhe">Análise por Hora</button>
+ </div>
+
+ <div id="hora-geral" class="subsection active">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Melhor Hora</span><strong id="hora-melhor">—</strong></div>
+ <div class="kpi green"><span>Fat. Melhor Hora</span><strong id="hora-melhor-fat">—</strong></div>
+ <div class="kpi"><span>Pessoas</span><strong id="hora-pessoas">—</strong></div>
+ <div class="kpi"><span>Ticket Médio</span><strong id="hora-ticket">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3>Faturamento por hora</h3>
+ <canvas id="chartHorarioFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3>Pessoas por hora</h3>
+ <canvas id="chartHorarioPessoas"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Tabela de horários</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Hora</th>
+ <th>Faturamento</th>
+ <th>Pessoas</th>
+ <th>Ticket</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyHorario"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="hora-detalhe" class="subsection">
+ <div class="toolbar">
+ <select id="selectHora" class="select"></select>
+ </div>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Faturamento Total</span><strong id="hora-det-fat">—</strong></div>
+ <div class="kpi green"><span>Faturamento Médio</span><strong id="hora-det-fat-medio">—</strong></div>
+ <div class="kpi"><span>Pessoas Médias</span><strong id="hora-det-pessoas">—</strong></div>
+ <div class="kpi"><span>Ticket Médio</span><strong id="hora-det-ticket">—</strong></div>
+ </div>
+
+ <div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Evolução da Hora</h3>
+ <canvas id="chartHoraDetalheFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>Pessoas na Hora</h3>
+ <canvas id="chartHoraDetalhePessoas"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Ocorrências da hora selecionada</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Período</th>
+ <th>Faturamento</th>
+ <th>Pessoas</th>
+ <th>Ticket</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyHoraDetalhe"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- GAR�ONS -->
+ <section id="sec-garcons" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Garçons</h2>
+ <p>Ranking, perfil e crescimento</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoGarcons">Mês da aba</label>
+ <select id="periodoGarcons" class="select"></select>
+ </div>
+
+ <div class="subtabs">
+ <button class="subtab active" data-garcons-tab="ranking">Ranking</button>
+ <button class="subtab" data-garcons-tab="perfil">Perfil</button>
+ <button class="subtab" data-garcons-tab="crescimento">Crescimento</button>
+ </div>
+
+ <div id="garcons-ranking" class="subsection active">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Top Atendente</span><strong id="garcon-top">—</strong></div>
+ <div class="kpi green"><span>Fat. Top</span><strong id="garcon-top-fat">—</strong></div>
+ <div class="kpi"><span>Qtd Atendentes</span><strong id="garcon-qtd">—</strong></div>
+ <div class="kpi"><span>Ticket Médio</span><strong id="garcon-ticket">—</strong></div>
+ </div>
+
+ <div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Ranking</h3>
+ <canvas id="chartGarconsRanking"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Tabela</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Atendente</th>
+ <th>Quantidade</th>
+ <th>Faturamento</th>
+ <th>Ticket</th>
+ <th>Participação</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyGarcons"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="garcons-perfil" class="subsection">
+ <div class="toolbar">
+ <select id="selectGarcomPerfil" class="select">
+ <option value="">Selecione um atendente</option>
+ </select>
+ </div>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Faturamento</span><strong id="perfil-fat">—</strong></div>
+ <div class="kpi green"><span>Ticket Médio</span><strong id="perfil-ticket">—</strong></div>
+ <div class="kpi"><span>Quantidade</span><strong id="perfil-qtd">—</strong></div>
+ <div class="kpi"><span>Participação</span><strong id="perfil-pct">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3>Evolução</h3>
+ <canvas id="chartPerfilGarcom"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3>Participação</h3>
+ <canvas id="chartPerfilGarcomPizza"></canvas>
+ </div>
+ </div>
+ </div>
+
+ <div id="garcons-crescimento" class="subsection">
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Maior Crescimento</span><strong id="gar-crescimento-top">—</strong></div>
+ <div class="kpi green"><span>Maior Faturamento</span><strong id="gar-crescimento-fat">—</strong></div>
+ <div class="kpi"><span>Qtd Atendentes</span><strong id="gar-crescimento-qtd">—</strong></div>
+ <div class="kpi"><span>Média Geral</span><strong id="gar-crescimento-media">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3>Evolução</h3>
+ <canvas id="chartGarcomCrescimento"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3>Participação</h3>
+ <canvas id="chartGarcomParticipacao"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Crescimento mensal</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Atendente</th>
+ <th>Período</th>
+ <th>Faturamento</th>
+ <th>Quantidade</th>
+ <th>Ticket</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyGarcomCrescimento"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- CARDÁPIO -->
+ <section id="sec-cardapio" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Cardápio & Grupos</h2>
+ <p>Produtos, categorias, tamanhos e evolução</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoCardapio">Mês da aba</label>
+ <select id="periodoCardapio" class="select"></select>
+ </div>
+
+ <div class="subtabs">
+ <button class="subtab active" data-prod-tab="categoria">Por Categoria</button>
+ <button class="subtab" data-prod-tab="tamanho">Por Tamanho</button>
+ <button class="subtab" data-prod-tab="destaque">Produtos Destaque</button>
+ <button class="subtab" data-prod-tab="crescimento">Crescimento</button>
+ <button class="subtab" data-prod-tab="cardapio">Cardápio</button>
+ </div>
+
+ <div id="produtos-conteudo" class="subsection active">
+ <div id="produtos-crescimento-filtros" class="toolbar" style="display:none">
+ <select id="selectProdutoCrescimento" class="select">
+ <option value="todos">Todos os Produtos</option>
+ </select>
+
+ <select id="selectProdutoComparacao" class="select">
+ <option value="">Comparar com...</option>
+ </select>
+
+ <select id="selectTamanhoCrescimento" class="select">
+ <option value="todos">Todos os Tamanhos</option>
+ <option value="GR">GR</option>
+ <option value="FM">FM</option>
+ <option value="PQ">PQ</option>
+ <option value="OUTRO">OUTRO</option>
+ </select>
+
+ <select id="selectMetricaCrescimento" class="select">
+ <option value="quantidade">Quantidade</option>
+ <option value="valor_total">Faturamento</option>
+ </select>
+ </div>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Produto Top</span><strong id="prod-top">—</strong></div>
+ <div class="kpi green"><span>Fat. Produto Top</span><strong id="prod-top-fat">—</strong></div>
+ <div class="kpi"><span>Qtd Produtos</span><strong id="prod-qtd">—</strong></div>
+ <div class="kpi"><span>Qtd Vendida</span><strong id="prod-qtd-vendida">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card chart-wide">
+ <h3 id="prod-chart-ranking-title">Ranking</h3>
+ <canvas id="chartProdutosRanking"></canvas>
+ </div>
+
+ <div class="chart-card chart-compact">
+ <h3 id="prod-chart-tamanho-title">Composição</h3>
+ <canvas id="chartProdutosTamanho"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3 id="prod-table-title">Produtos</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Produto</th>
+ <th>Grupo</th>
+ <th>Tamanho</th>
+ <th>Quantidade</th>
+ <th>Faturamento</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyProdutos"></tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- COMPARAR -->
+ <section id="sec-comparar" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Comparar Períodos</h2>
+ <p>Comparativo personalizado por intervalo de datas</p>
+ </div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card">
+ <h3>Período A</h3>
+ <div class="toolbar">
+ <input id="compararAInicio" class="select" type="date" />
+ <input id="compararAFim" class="select" type="date" />
+ </div>
+ </div>
+
+ <div class="chart-card">
+ <h3>Período B</h3>
+ <div class="toolbar">
+ <input id="compararBInicio" class="select" type="date" />
+ <input id="compararBFim" class="select" type="date" />
+ </div>
+ </div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card">
+ <h3> Insights da Comparação</h3>
+ <div id="comparar-insights"></div>
+ </div>
+
+ <div class="chart-card">
+ <h3> Alertas</h3>
+ <div id="comparar-alertas"></div>
+ </div>
+ </div>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Diferença Faturamento</span><strong id="comp-fat-diff">—</strong></div>
+ <div class="kpi green"><span>Diferença Pessoas</span><strong id="comp-pessoas-diff">—</strong></div>
+ <div class="kpi"><span>Diferença Ticket</span><strong id="comp-ticket-diff">—</strong></div>
+ <div class="kpi"><span>Diferença Dias</span><strong id="comp-dias-diff">—</strong></div>
+ <div class="kpi blue"><span>Fat./Dia</span><strong id="comp-fat-dia">—</strong></div>
+ <div class="kpi blue"><span>Pessoas/Dia</span><strong id="comp-pessoas-dia">—</strong></div>
+ <div class="kpi blue"><span>Crescimento %</span><strong id="comp-crescimento-pct">—</strong></div>
+ <div class="kpi blue"><span>Ticket</span><strong id="comp-ticket-dia">—</strong></div>
+ </div>
+
+ <div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Faturamento Comparativo</h3>
+ <canvas id="chartCompararFat"></canvas>
+ </div>
+
+ <div class="chart-card chart-wide">
+ <h3>Pessoas Comparativo</h3>
+ <canvas id="chartCompararPessoas"></canvas>
+ </div>
+ </div>
+
+ <div class="table-card">
+ <div class="table-head"><h3>Resumo Comparativo</h3></div>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Métrica</th>
+ <th>Período A</th>
+ <th>Período B</th>
+ <th>Diferença</th>
+ </tr>
+ </thead>
+ <tbody id="tbodyComparar"></tbody>
+ </table>
+ </div>
+ </div>
+
+ </section>
+
+ <!-- INSIGHTS GERAIS -->
+ <section id="sec-insights" class="section">
+
+ <div class="section-head">
+ <div>
+ <h2>Insights Gerais</h2>
+ <p>Resumo executivo automático da operação</p>
+ </div>
+ </div>
+
+ <div class="toolbar aba-periodo-toolbar">
+ <label class="field-label" for="periodoInsights">Mês da aba</label>
+ <select id="periodoInsights" class="select"></select>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card">
+ <h3> Resumo Executivo</h3>
+ <div id="insights-gerais-resumo"></div>
+ </div>
+
+ <div class="chart-card">
+ <h3> Alertas Gerais</h3>
+ <div id="insights-gerais-alertas"></div>
+ </div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card">
+ <h3> Produtos</h3>
+ <div id="insights-gerais-produtos"></div>
+ </div>
+
+ <div class="chart-card">
+ <h3> Operação</h3>
+ <div id="insights-gerais-operacao"></div>
+ </div>
+ </div>
+
+ </section>
+
+</main>
+
+<script src="./js/app.js"></script>
+
+</body>
+</html>
