@@ -1,7 +1,7 @@
 // Dashboard Loppiano — app.js consolidado
 // Vers—o limpa: sem Comandas, sem duplica——es, com Dia da Semana e Hor—rio em subtabs.
 
-await verificarLogin()
+verificarLogin()
 
 let DATA = {
  resumo_mensal: [],
