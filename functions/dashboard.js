@@ -56,28 +56,30 @@ export async function onRequest(context) {
       context.env.SUPABASE_SERVICE_ROLE
     )
 
-    const resumoMensal = await buscarTudo(
+    const horarios = await buscarTudo(
       supabase,
-      'vw_dashboard_resumo_mensal',
+      'vendas_horario',
       {
         orderBy: 'periodo'
       }
     )
 
     return Response.json({
-      etapa: 'resumoMensal',
-      qtd: resumoMensal.length
+      etapa: 'horarios',
+      qtd: horarios.length
     })
 
   } catch (error) {
 
     return Response.json({
       erro: error.message,
-      stack: error.stack
+      detalhes: error
     }, {
       status: 500
     })
 
   }
+
+}
 
 }
