@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Administração</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#111;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.card{
+  background:#1f1f1f;
+  padding:30px;
+  border-radius:12px;
+  width:400px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  margin-bottom:20px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  cursor:pointer;
+}
+
+#painel{
+  display:none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<div id="login">
+
+<h2>Área Administrativa</h2>
+
+<input
+  type="password"
+  id="senha"
+  placeholder="Digite a senha"
+/>
+
+<button onclick="entrar()">
+Entrar
+</button>
+
+</div>
+
+<div id="painel">
+
+<h2>Importação</h2>
+
+<p>Operação Mensal</p>
+
+<input type="file" id="operacao">
+
+<p>Metas</p>
+
+<input type="file" id="metas">
+
+<button>
+Atualizar Dados
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function entrar(){
+
+  const senha = document.getElementById('senha').value
+
+  if(senha === 'loppiano123'){
+
+    document.getElementById('login').style.display='none'
+    document.getElementById('painel').style.display='block'
+
+  }else{
+
+    alert('Senha inválida')
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
