@@ -263,6 +263,24 @@ tr:last-child td {
   font-weight: 800;
 }
 
+.kpi-card{
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+
+}
+
+.kpi-card:hover{
+
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 15px 30px rgba(0,0,0,.12);
+
+}
+
 #comparar-insights,
 #comparar-alertas,
 #insights-crescimento,
