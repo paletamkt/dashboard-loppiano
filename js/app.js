@@ -504,13 +504,39 @@ function renderTudo() {
 // ===============================
 
 function renderKPIs(dados) {
+
  const ref = getItemReferencia(dados)
+
  if (!ref) return
 
- $('kpi-fat').textContent = fmtBRL(ref.fat_real_total)
- $('kpi-meta').textContent = fmtBRL(ref.meta_total)
- $('kpi-pct').textContent = fmtPct(ref.pct_meta_total)
- $('kpi-pessoas').textContent = fmtNum(ref.pessoas_reais)
+ animarNumero(
+   $('kpi-fat'),
+   Number(ref.fat_real_total || 0),
+   valor => fmtBRL(valor)
+ )
+
+ animarNumero(
+   $('kpi-meta'),
+   Number(ref.meta_total || 0),
+   valor => fmtBRL(valor)
+ )
+
+ animarNumero(
+   $('kpi-pct'),
+   Number(ref.pct_meta_total || 0) * 100,
+   valor => `${valor.toFixed(1)}%`
+ )
+
+ animarNumero(
+   $('kpi-pessoas'),
+   Number(ref.pessoas_reais || 0),
+   valor =>
+     Math.round(valor)
+     .toLocaleString('pt-BR')
+ )
+
+ animarCards()
+
 }
 
 function renderTabela(dados) {
