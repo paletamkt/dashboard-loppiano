@@ -1,5 +1,5 @@
 // Dashboard Loppiano — app.js consolidado
-// Vers—o limpa: sem Comandas, sem duplica——es, com Dia da Semana e Hor—rio em subtabs.
+// Versão limpa: sem Comandas, sem duplicações, com Dia da Semana e Horário em subtabs.
 
 verificarLogin()
 
@@ -15,7 +15,7 @@ let DATA = {
 let filtroPeriodo = 'todos'
 
 // Filtros pr—prios por aba.
-// Quando estiver como "todos", a aba mostra todos os per—odos dispon—veis daquela base.
+// Quando estiver como "todos", a aba mostra todos os períodos dispon—veis daquela base.
 let filtroMetas = 'todos'
 let filtroDiaSemana = 'todos'
 let filtroCanais = 'todos'
@@ -187,7 +187,7 @@ function montarFiltroPeriodoAba(idSelect, periodos, valorAtual, onChange) {
 
  if (select.dataset.assinatura !== assinatura) {
  select.innerHTML = `
- <option value="todos">Todos os per—odos</option>
+ <option value="todos">Todos os períodos</option>
  ${normalizados.map(p => `
  <option value="${p}">
  ${periodoParaLabel(p)}
@@ -357,6 +357,7 @@ function bindSubtabsGenericas() {
  bindSubtabGroup('hora', 'horaTab')
  bindSubtabGroup('metas', 'metasTab')
  bindSubtabGroup('garcons', 'garconsTab')
+ bindSubtabGroup('comparar', 'compararTab')
 }
 
 function bindSubtabGroup(prefixo, datasetKey) {
@@ -376,6 +377,8 @@ function bindSubtabGroup(prefixo, datasetKey) {
  ? '#sec-garcons'
  : prefixo === 'hora'
  ? '#sec-horario'
+ : prefixo === 'comparar'
+ ? '#sec-comparar'
  : '#sec-dia'
 
  document.querySelectorAll(`${secPai} .subsection`)
@@ -436,7 +439,7 @@ function montarFiltroPeriodo() {
  )].sort((a, b) => periodoParaOrdem(a) - periodoParaOrdem(b))
 
  select.innerHTML = `
- <option value="todos">Todos os per—odos</option>
+ <option value="todos">Todos os períodos</option>
  ${periodos.map(p => `<option value="${p}">${p}</option>`).join('')}
  `
 
@@ -619,7 +622,7 @@ function renderGraficoCanais(dados) {
  chartCanais = new Chart(ctx, {
  type: 'doughnut',
  data: {
- labels: ['Sal—o', 'Delivery'],
+ labels: ['Salão', 'Delivery'],
  datasets: [{ data: [totalSalao, totalDelivery] }]
  },
  options: { responsive: true }
@@ -674,7 +677,7 @@ function renderChartCanaisLinha(dados) {
  data: {
  labels: dados.map(d => d.periodo),
  datasets: [
- { label: 'Sal—o', data: dados.map(d => Number(d.fat_real_salao || 0)) },
+ { label: 'Salão', data: dados.map(d => Number(d.fat_real_salao || 0)) },
  { label: 'Delivery', data: dados.map(d => Number(d.fat_real_delivery || 0)) }
  ]
  },
@@ -691,7 +694,7 @@ function renderChartCanaisPizza(totalSalao, totalDelivery) {
  chartCanaisPizza = new Chart(ctx, {
  type: 'doughnut',
  data: {
- labels: ['Sal—o', 'Delivery'],
+ labels: ['Salão', 'Delivery'],
  datasets: [{ data: [totalSalao, totalDelivery] }]
  },
  options: { responsive: true }
@@ -1196,13 +1199,13 @@ function getVendasDiariasMetasFiltradas() {
 
 
 function nomeDiaSemana(dataISO) {
- const dias = ['Domingo', 'Segunda', 'Ter—a', 'Quarta', 'Quinta', 'Sexta', 'S—bado']
+ const dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
  const data = new Date(`${dataISO}T12:00:00`)
  return dias[data.getDay()]
 }
 
 function agruparPorDiaSemana(vendas) {
- const ordem = ['Segunda', 'Ter—a', 'Quarta', 'Quinta', 'Sexta', 'S—bado', 'Domingo']
+ const ordem = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
  const mapa = {}
 
  vendas.forEach(v => {
@@ -1331,7 +1334,7 @@ function renderChartDiaSemanaFat(dados) {
  labels: dados.map(d => d.dia),
  datasets: [
  {
- label: 'Faturamento m—dio',
+ label: 'Faturamento médio',
  data: dados.map(d => d.fat_medio)
  }
  ]
@@ -1352,7 +1355,7 @@ function renderChartDiaSemanaTicket(dados) {
  labels: dados.map(d => d.dia),
  datasets: [
  {
- label: 'Ticket m—dio',
+ label: 'Ticket médio',
  data: dados.map(d => d.ticket)
  }
  ]
@@ -1732,7 +1735,7 @@ function renderChartMetaCanaisPizza(salao, delivery) {
  chartMetaCanaisPizza = new Chart(ctx, {
  type: 'doughnut',
  data: {
- labels: ['Sal—o', 'Delivery'],
+ labels: ['Salão', 'Delivery'],
  datasets: [{ data: [salao, delivery] }]
  },
  options: { responsive: true }
@@ -1748,7 +1751,7 @@ function renderChartMetaCanaisBar(salao, delivery) {
  chartMetaCanaisBar = new Chart(ctx, {
  type: 'bar',
  data: {
- labels: ['Sal—o', 'Delivery'],
+ labels: ['Salão', 'Delivery'],
  datasets: [
  {
  label: 'Faturamento',
@@ -2004,7 +2007,7 @@ function renderProdutosBase(dados, titulo) {
  $('prod-qtd-vendida').textContent = fmtNum(qtdTotal)
 
  $('prod-chart-ranking-title').textContent = titulo
- $('prod-chart-tamanho-title').textContent = 'Composi——o'
+ $('prod-chart-tamanho-title').textContent = 'Composição'
  $('prod-table-title').textContent = titulo
 
  $('tbodyProdutos').innerHTML = dados.slice(0, 100).map(p => `
@@ -2158,10 +2161,10 @@ function renderProdutosCrescimento() {
  $('prod-qtd-vendida').textContent = fmtNum(quantidade)
 
  $('prod-chart-ranking-title').textContent =
- produtoComparacao ? 'Compara——o de crescimento' : 'Crescimento mensal'
+ produtoComparacao ? 'Comparação de crescimento' : 'Crescimento mensal'
 
- $('prod-chart-tamanho-title').textContent = 'Composi——o do filtro'
- $('prod-table-title').textContent = 'Crescimento por per—odo'
+ $('prod-chart-tamanho-title').textContent = 'Composição do filtro'
+ $('prod-table-title').textContent = 'Crescimento por período'
 
  $('tbodyProdutos').innerHTML = periodos.map(periodo => {
  const valorPrincipal = principal.mapa[periodo] || 0
@@ -2211,19 +2214,19 @@ function renderProdutosCrescimento() {
 function renderCardapioManual() {
  esconderFiltrosCrescimento()
 
- $('prod-top').textContent = 'Card—pio'
+ $('prod-top').textContent = 'Cardápio'
  $('prod-top-fat').textContent = 'Manual'
  $('prod-qtd').textContent = '—'
  $('prod-qtd-vendida').textContent = '—'
 
- $('prod-chart-ranking-title').textContent = 'Card—pio'
- $('prod-chart-tamanho-title').textContent = 'Pre—os'
- $('prod-table-title').textContent = 'Card—pio Manual'
+ $('prod-chart-ranking-title').textContent = 'Cardápio'
+ $('prod-chart-tamanho-title').textContent = 'Preços'
+ $('prod-table-title').textContent = 'Cardápio Manual'
 
  $('tbodyProdutos').innerHTML = `
  <tr>
  <td colspan="5" style="text-align:left">
- —rea reservada para importar manualmente sabores e pre—os do card—pio f—sico.
+ área reservada para importar manualmente sabores e preços do cardápio físico.
  </td>
  </tr>
  `
@@ -2351,7 +2354,7 @@ function renderCompararPeriodos() {
  </tr>
 
  <tr>
- <td>Ticket M—dio</td>
+ <td>Ticket Médio</td>
  <td>${fmtBRL(resumoA.ticket)}</td>
  <td>${fmtBRL(resumoB.ticket)}</td>
  <td>${fmtBRL(diffTicket)}</td>
@@ -2395,7 +2398,7 @@ function renderChartCompararFatPorData(resumoA, resumoB) {
  chartCompararFat = new Chart(ctx, {
  type: 'bar',
  data: {
- labels: ['Per—odo A', 'Per—odo B'],
+ labels: ['Período A', 'Período B'],
  datasets: [
  {
  label: 'Faturamento',
@@ -2416,7 +2419,7 @@ function renderChartCompararPessoasPorData(resumoA, resumoB) {
  chartCompararPessoas = new Chart(ctx, {
  type: 'bar',
  data: {
- labels: ['Per—odo A', 'Per—odo B'],
+ labels: ['Período A', 'Período B'],
  datasets: [
  {
  label: 'Pessoas',
@@ -2463,7 +2466,7 @@ function renderInsightsCrescimento() {
  ${crescimento >= 0 ? '' : ''}
  Faturamento mudou
  <strong>${crescimento.toFixed(1)}%</strong>
- vs per—odo anterior.
+ vs período anterior.
  </div>
  `
 }
@@ -2492,7 +2495,7 @@ function renderInsightsAlertas() {
  if (!alertas) {
  alertas = `
  <div class="insight-item">
-  Opera——o saud—vel.
+  Operação saudável.
  </div>
  `
  }
@@ -2540,7 +2543,7 @@ function renderInsightsOperacao() {
 
  box.innerHTML = `
  <div class="insight-item">
-  Gar—om destaque:
+  Garçom destaque:
  <strong>${top.atendente}</strong>
  com <strong>${fmtBRL(top.fat)}</strong>.
  </div>
@@ -2582,19 +2585,19 @@ function renderInsightsComparacao(
  if (crescimentoPct > 0) {
  insights += `
  <div class="insight-item">
-  O per—odo B faturou <strong>${crescimentoPct.toFixed(1)}%</strong> mais que o per—odo A.
+  O período B faturou <strong>${crescimentoPct.toFixed(1)}%</strong> mais que o período A.
  </div>
  `
  } else if (crescimentoPct < 0) {
  insights += `
  <div class="insight-item">
-  O per—odo B faturou <strong>${Math.abs(crescimentoPct).toFixed(1)}%</strong> menos que o per—odo A.
+  O período B faturou <strong>${Math.abs(crescimentoPct).toFixed(1)}%</strong> menos que o período A.
  </div>
  `
  } else {
  insights += `
  <div class="insight-item">
-  O faturamento ficou praticamente est—vel entre os per—odos.
+  O faturamento ficou praticamente estável entre os períodos.
  </div>
  `
  }
@@ -2610,19 +2613,19 @@ function renderInsightsComparacao(
  } else if (diffPessoasDiaPct > 0 && diffTicketPct > 0) {
  insights += `
  <div class="insight-item">
-  Crescimento saud—vel: pessoas/dia e ticket m—dio subiram juntos.
+  Crescimento saudável: pessoas/dia e ticket médio subiram juntos.
  </div>
  `
  } else if (diffPessoasDiaPct < 0 && diffTicketPct > 0) {
  insights += `
  <div class="insight-item">
-  O ticket m—dio subiu, mas com menor fluxo de pessoas/dia.
+  O ticket médio subiu, mas com menor fluxo de pessoas/dia.
  </div>
  `
  } else if (diffPessoasDiaPct < 0 && diffTicketPct < 0) {
  insights += `
  <div class="insight-item">
-  Queda dupla: pessoas/dia e ticket m—dio ca—ram no per—odo B.
+  Queda dupla: pessoas/dia e ticket médio caíram no período B.
  </div>
  `
  }
@@ -2630,7 +2633,7 @@ function renderInsightsComparacao(
  if (diffFatDiaPct > 0) {
  insights += `
  <div class="insight-item">
-  A efici—ncia di—ria melhorou: faturamento/dia subiu
+  A eficiência diária melhorou: faturamento/dia subiu
  <strong>${diffFatDiaPct.toFixed(1)}%</strong>.
  </div>
  `
@@ -2646,7 +2649,7 @@ function renderInsightsComparacao(
  if (crescimentoPct < -10) {
  alertas += `
  <div class="insight-item">
-  Queda relevante de faturamento. Vale investigar canal, produto e hor—rio.
+  Queda relevante de faturamento. Vale investigar canal, produto e horário.
  </div>
  `
  }
@@ -2654,9 +2657,9 @@ function renderInsightsComparacao(
  if (diffTicketPct < -8) {
  alertas += `
  <div class="insight-item">
-  Ticket m—dio caiu
+  Ticket médio caiu
  <strong>${Math.abs(diffTicketPct).toFixed(1)}%</strong>.
- Pode indicar mix mais barato ou maior peso de delivery/promo——es.
+ Pode indicar mix mais barato ou maior peso de delivery/promoções.
  </div>
  `
  }
@@ -2664,7 +2667,7 @@ function renderInsightsComparacao(
  if (!alertas) {
  alertas = `
  <div class="insight-item">
-  Nenhum alerta cr—tico identificado na compara——o.
+  Nenhum alerta crítico identificado na comparação.
  </div>
  `
  }
@@ -2714,8 +2717,7 @@ function renderInsightsGeraisResumo() {
 
  crescimentoHtml = `
  <div class="insight-item">
- ${crescimento >= 0 ? '' : ''}
- —ltimo per—odo (${ultimo.periodo}) teve varia——o de
+ Último período (${ultimo.periodo}) teve variação de
  <strong>${crescimento.toFixed(1)}%</strong>
  vs ${anterior.periodo}.
  </div>
@@ -2724,13 +2726,13 @@ function renderInsightsGeraisResumo() {
 
  box.innerHTML = `
  <div class="insight-item">
-  Melhor per—odo:
+  Melhor período:
  <strong>${maiorMes.periodo}</strong>
  com <strong>${fmtBRL(maiorMes.fat_real_total)}</strong>.
  </div>
 
  <div class="insight-item">
-  —ltimo per—odo carregado:
+  último período carregado:
  <strong>${ultimo.periodo}</strong>
  com <strong>${fmtBRL(ultimo.fat_real_total)}</strong>.
  </div>
@@ -2758,7 +2760,7 @@ function renderInsightsGeraisAlertas() {
  if (pctMeta < 80) {
  alertas += `
  <div class="insight-item">
-  Meta em risco: —ltimo per—odo est— em
+  Meta em risco: último período está em
  <strong>${pctMeta.toFixed(1)}%</strong>
  da meta.
  </div>
@@ -2766,7 +2768,7 @@ function renderInsightsGeraisAlertas() {
  } else if (pctMeta < 100) {
  alertas += `
  <div class="insight-item">
-  Meta ainda n—o batida: —ltimo per—odo est— em
+  Meta ainda não batida: último período está em
  <strong>${pctMeta.toFixed(1)}%</strong>.
  </div>
  `
@@ -2775,7 +2777,7 @@ function renderInsightsGeraisAlertas() {
  if (!alertas) {
  alertas = `
  <div class="insight-item">
-  Nenhum alerta geral cr—tico identificado.
+  Nenhum alerta geral crítico identificado.
  </div>
  `
  }
@@ -2851,7 +2853,7 @@ function renderInsightsGeraisOperacao() {
 
  html += `
  <div class="insight-item">
-  Atendente l—der:
+  Atendente líder:
  <strong>${top.atendente}</strong>
  com <strong>${fmtBRL(top.fat)}</strong>.
  </div>
@@ -2877,7 +2879,7 @@ function renderInsightsGeraisOperacao() {
 
  html += `
  <div class="insight-item">
-  Hor—rio mais forte:
+  Horário mais forte:
  <strong>${topHora.hora}h</strong>
  com <strong>${fmtBRL(topHora.fat)}</strong>.
  </div>

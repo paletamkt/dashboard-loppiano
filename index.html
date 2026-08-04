@@ -58,6 +58,7 @@
 
  <div class="subtabs">
  <button class="subtab" data-metas-tab="diaria">Análise Diária</button>
+ <button class="subtab" data-metas-tab="diaria-detalhes">Diária • Detalhes</button>
  <button class="subtab" data-metas-tab="canais">Salão vs Delivery</button>
  <button class="subtab active" data-metas-tab="visao">Visão Mensal</button>
  <button class="subtab" data-metas-tab="historico">Histórico Geral</button>
@@ -78,7 +79,7 @@
  </div>
 
  <div class="chart-card chart-compact">
- <h3>SalÃo vs Delivery</h3>
+ <h3>Salão vs Delivery</h3>
  <canvas id="chartCanais"></canvas>
  </div>
  </div>
@@ -107,18 +108,11 @@
 
  <div id="metas-diaria" class="subsection">
  <div class="kpi-grid">
- <div class="kpi red"><span>Melhor Dia</span><strong id="meta-dia-top">—</strong></div>
- <div class="kpi green"><span>Fat. Melhor Dia</span><strong id="meta-dia-fat">—</strong></div>
- <div class="kpi"><span>Média Diária</span><strong id="meta-dia-media">—</strong></div>
- <div class="kpi"><span>Dias no Filtro</span><strong id="meta-dia-qtd">—</strong></div>
+ <div class="kpi red"><span>Faturamento no Mês</span><strong id="meta-dia-fat-realizado">—</strong></div>
+ <div class="kpi green"><span>Meta Prevista</span><strong id="meta-dia-meta-prevista">—</strong></div>
+ <div class="kpi"><span>% Atingido</span><strong id="meta-dia-pct-atingido">—</strong></div>
+ <div class="kpi"><span>Dias Corridos</span><strong id="meta-dia-dias-corridos">—</strong></div>
  </div>
-
-       <div class="kpi-grid">
-        <div class="kpi red"><span>Faturamento no Mês</span><strong id="meta-dia-fat-realizado">—</strong></div>
-        <div class="kpi green"><span>Meta Prevista</span><strong id="meta-dia-meta-prevista">—</strong></div>
-        <div class="kpi"><span>% Atingido</span><strong id="meta-dia-pct-atingido">—</strong></div>
-        <div class="kpi"><span>Dias Corridos</span><strong id="meta-dia-dias-corridos">—</strong></div>
-      </div>
 
 <div class="layout-stack">
  <div class="chart-card chart-wide">
@@ -129,11 +123,6 @@
  <div class="chart-card chart-wide">
  <h3>Acumulado real vs Meta acumulada</h3>
  <canvas id="chartMetaDiariaComparativo"></canvas>
- </div>
-
- <div class="chart-card chart-wide">
- <h3>Pessoas por dia</h3>
- <canvas id="chartMetaDiariaPessoas"></canvas>
  </div>
  </div>
 
@@ -156,6 +145,24 @@
  </thead>
  <tbody id="tbodyMetaDiaria"></tbody>
  </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="metas-diaria-detalhes" class="subsection">
+ <p class="detail-note">Métricas complementares do período — melhor dia, médias e distribuição de pessoas</p>
+
+ <div class="kpi-grid">
+ <div class="kpi red"><span>Melhor Dia</span><strong id="meta-dia-top">—</strong></div>
+ <div class="kpi green"><span>Fat. Melhor Dia</span><strong id="meta-dia-fat">—</strong></div>
+ <div class="kpi"><span>Média Diária</span><strong id="meta-dia-media">—</strong></div>
+ <div class="kpi"><span>Dias no Filtro</span><strong id="meta-dia-qtd">—</strong></div>
+ </div>
+
+ <div class="layout-stack">
+ <div class="chart-card chart-wide">
+ <h3>Pessoas por dia</h3>
+ <canvas id="chartMetaDiariaPessoas"></canvas>
  </div>
  </div>
  </div>
@@ -355,7 +362,7 @@
  <table>
  <thead>
  <tr>
- <th>Peíodo</th>
+ <th>Período</th>
  <th>Salão</th>
  <th>Delivery</th>
  <th>Total</th>
@@ -372,7 +379,7 @@
 
  </section>
 
- <!-- HOR�RIO -->
+ <!-- HORÁRIO -->
  <section id="sec-horario" class="section">
 
  <div class="section-head">
@@ -474,7 +481,7 @@
 
  </section>
 
- <!-- GAR�ONS -->
+ <!-- GARÇONS -->
  <section id="sec-garcons" class="section">
 
  <div class="section-head">
@@ -712,27 +719,17 @@
  </div>
  </div>
 
- <div class="layout-main-side">
- <div class="chart-card">
- <h3> Insights da Comparação</h3>
- <div id="comparar-insights"></div>
+ <div class="subtabs">
+ <button class="subtab active" data-comparar-tab="resumo">Resumo</button>
+ <button class="subtab" data-comparar-tab="detalhes">Detalhes</button>
  </div>
 
- <div class="chart-card">
- <h3> Alertas</h3>
- <div id="comparar-alertas"></div>
- </div>
- </div>
-
+ <div id="comparar-resumo" class="subsection active">
  <div class="kpi-grid">
  <div class="kpi red"><span>Diferença Faturamento</span><strong id="comp-fat-diff">—</strong></div>
  <div class="kpi green"><span>Diferença Pessoas</span><strong id="comp-pessoas-diff">—</strong></div>
  <div class="kpi"><span>Diferença Ticket</span><strong id="comp-ticket-diff">—</strong></div>
- <div class="kpi"><span>Diferença Dias</span><strong id="comp-dias-diff">—</strong></div>
- <div class="kpi blue"><span>Fat./Dia</span><strong id="comp-fat-dia">—</strong></div>
- <div class="kpi blue"><span>Pessoas/Dia</span><strong id="comp-pessoas-dia">—</strong></div>
  <div class="kpi blue"><span>Crescimento %</span><strong id="comp-crescimento-pct">—</strong></div>
- <div class="kpi blue"><span>Ticket</span><strong id="comp-ticket-dia">—</strong></div>
  </div>
 
  <div class="layout-stack">
@@ -761,6 +758,30 @@
  </thead>
  <tbody id="tbodyComparar"></tbody>
  </table>
+ </div>
+ </div>
+ </div>
+
+ <div id="comparar-detalhes" class="subsection">
+ <p class="detail-note">Métricas complementares — médias diárias e insights automáticos</p>
+
+ <div class="kpi-grid">
+ <div class="kpi"><span>Diferença Dias</span><strong id="comp-dias-diff">—</strong></div>
+ <div class="kpi blue"><span>Fat./Dia</span><strong id="comp-fat-dia">—</strong></div>
+ <div class="kpi blue"><span>Pessoas/Dia</span><strong id="comp-pessoas-dia">—</strong></div>
+ <div class="kpi blue"><span>Ticket</span><strong id="comp-ticket-dia">—</strong></div>
+ </div>
+
+ <div class="layout-main-side">
+ <div class="chart-card">
+ <h3>Insights da Comparação</h3>
+ <div id="comparar-insights"></div>
+ </div>
+
+ <div class="chart-card">
+ <h3>Alertas</h3>
+ <div id="comparar-alertas"></div>
+ </div>
  </div>
  </div>
 

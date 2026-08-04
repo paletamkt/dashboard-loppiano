@@ -7,53 +7,18 @@
 
 <title>Login Dashboard</title>
 
+<link rel="stylesheet" href="./css/style.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
-body{
-  margin:0;
-  background:#111827;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-family:Arial,sans-serif;
-}
-
-.card{
-  width:380px;
-  background:white;
-  padding:30px;
-  border-radius:12px;
-}
-
-h2{
-  margin-top:0;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:12px;
-  box-sizing:border-box;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  cursor:pointer;
-}
-
-</style>
 
 </head>
 
 <body>
 
-<div class="card">
+<div class="auth-shell">
+<div class="auth-card">
 
 <h2>Loppiano Dashboard</h2>
+<div class="info">Entre com seu email e senha para acessar o painel.</div>
 
 <input
   id="email"
@@ -71,6 +36,7 @@ button{
 Entrar
 </button>
 
+</div>
 </div>
 
 <script>
