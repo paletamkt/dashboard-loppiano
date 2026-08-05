@@ -17,24 +17,73 @@
 <div class="auth-shell">
 <div class="auth-card">
 
-<h2>Loppiano Dashboard</h2>
-<div class="info">Entre com seu email e senha para acessar o painel.</div>
+  <div class="auth-logo">
+    <!-- Para usar a logo real: salve o arquivo em img/logo.png (ou .svg) neste
+         repositório. Assim que o arquivo existir, ele aparece aqui automaticamente. -->
+    <img
+      src="img/logo.png"
+      alt="Loppiano"
+      onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex'"
+    />
+    <div id="logo-fallback" class="auth-logo-fallback">LP</div>
+  </div>
 
-<input
-  id="email"
-  type="email"
-  placeholder="Email"
-/>
+  <div id="tela-login">
 
-<input
-  id="senha"
-  type="password"
-  placeholder="Senha"
-/>
+    <h2>Loppiano Dashboard</h2>
+    <div class="info">Entre com seu email e senha para acessar o painel.</div>
 
-<button id="btnLogin">
-Entrar
-</button>
+    <input
+      id="email"
+      type="email"
+      placeholder="Email"
+      autocomplete="username"
+    />
+
+    <div class="password-field">
+      <input
+        id="senha"
+        type="password"
+        placeholder="Senha"
+        autocomplete="current-password"
+      />
+      <button type="button" id="btnMostrarSenha" class="password-toggle" aria-label="Mostrar senha">
+        <svg id="icone-olho" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="icone-olho-fechado" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.3 21.3 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a21.4 21.4 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+
+    <button id="btnLogin">
+    Entrar
+    </button>
+
+    <button type="button" id="btnEsqueciSenha" class="link-btn">
+      Esqueci minha senha
+    </button>
+
+  </div>
+
+  <div id="tela-esqueci" style="display:none">
+
+    <h2>Recuperar senha</h2>
+    <div class="info">Digite seu email. Vamos enviar um link para redefinir a senha.</div>
+
+    <input
+      id="emailRecuperar"
+      type="email"
+      placeholder="Email"
+      autocomplete="username"
+    />
+
+    <button id="btnEnviarRecuperacao">
+    Enviar link de recuperação
+    </button>
+
+    <button type="button" id="btnVoltarLogin" class="link-btn">
+      Voltar para o login
+    </button>
+
+  </div>
 
 </div>
 </div>
@@ -57,6 +106,41 @@ document
 .getElementById('btnLogin')
 .addEventListener('click', login)
 
+document
+.getElementById('btnMostrarSenha')
+.addEventListener('click', alternarVisibilidadeSenha)
+
+document
+.getElementById('btnEsqueciSenha')
+.addEventListener('click', () => alternarTela(true))
+
+document
+.getElementById('btnVoltarLogin')
+.addEventListener('click', () => alternarTela(false))
+
+document
+.getElementById('btnEnviarRecuperacao')
+.addEventListener('click', enviarRecuperacaoSenha)
+
+function alternarVisibilidadeSenha(){
+
+  const campo = document.getElementById('senha')
+  const mostrando = campo.type === 'text'
+
+  campo.type = mostrando ? 'password' : 'text'
+
+  document.getElementById('icone-olho').style.display = mostrando ? 'block' : 'none'
+  document.getElementById('icone-olho-fechado').style.display = mostrando ? 'none' : 'block'
+
+}
+
+function alternarTela(mostrarRecuperar){
+
+  document.getElementById('tela-login').style.display = mostrarRecuperar ? 'none' : 'block'
+  document.getElementById('tela-esqueci').style.display = mostrarRecuperar ? 'block' : 'none'
+
+}
+
 async function login(){
 
   const email =
@@ -65,16 +149,11 @@ async function login(){
   const password =
   document.getElementById('senha').value
 
-  console.log('CLIENTE:')
-  console.log(client)
-
   const resultado =
   await client.auth.signInWithPassword({
     email,
     password
   })
-
-  console.log(resultado)
 
   if(resultado.error){
 
@@ -84,6 +163,31 @@ async function login(){
   }
 
   window.location.href='/'
+
+}
+
+async function enviarRecuperacaoSenha(){
+
+  const email =
+  document.getElementById('emailRecuperar').value
+
+  if(!email){
+    alert('Digite seu email.')
+    return
+  }
+
+  const { error } =
+  await client.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login.html'
+  })
+
+  if(error){
+    alert(error.message)
+    return
+  }
+
+  alert('Se esse email estiver cadastrado, você vai receber um link para redefinir a senha.')
+  alternarTela(false)
 
 }
 

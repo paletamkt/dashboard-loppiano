@@ -501,9 +501,7 @@ tbody tr:hover td:first-child {
   line-height: 1.5;
 }
 
-.auth-card input[type="password"],
-.auth-card input[type="email"],
-.auth-card input[type="file"] {
+.auth-card input {
   width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
@@ -541,6 +539,100 @@ tbody tr:hover td:first-child {
 
 .auth-card button:hover {
   opacity: 0.88;
+}
+
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+}
+
+.auth-logo img {
+  max-height: 88px;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+}
+
+.auth-logo-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--text);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 44px !important;
+}
+
+.auth-card .password-toggle {
+  position: absolute;
+  right: 4px;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  margin: 5px 0 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.auth-card .password-toggle:hover {
+  color: var(--text);
+  background: var(--bg);
+  opacity: 1;
+}
+
+.auth-card .link-btn {
+  width: 100%;
+  margin-top: var(--space-1);
+  padding: 4px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth-card .link-btn:hover {
+  color: var(--text);
+  background: transparent;
+  opacity: 1;
+}
+
+@keyframes auth-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-card {
+  animation: auth-card-in 0.35s ease both;
 }
 
 /* ---------- Responsive ---------- */
