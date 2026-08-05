@@ -85,6 +85,37 @@
 
   </div>
 
+  <div id="tela-nova-senha" style="display:none">
+
+    <h2>Definir nova senha</h2>
+    <div class="info">Digite sua nova senha para acessar o painel.</div>
+
+    <div class="password-field">
+      <input
+        id="novaSenha"
+        type="password"
+        placeholder="Nova senha"
+        autocomplete="new-password"
+      />
+      <button type="button" id="btnMostrarNovaSenha" class="password-toggle" aria-label="Mostrar senha">
+        <svg id="icone-olho-nova" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="icone-olho-fechado-nova" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.3 21.3 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a21.4 21.4 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+
+    <input
+      id="confirmarNovaSenha"
+      type="password"
+      placeholder="Confirmar nova senha"
+      autocomplete="new-password"
+    />
+
+    <button id="btnSalvarNovaSenha">
+    Salvar nova senha
+    </button>
+
+  </div>
+
 </div>
 </div>
 
@@ -108,36 +139,53 @@ document
 
 document
 .getElementById('btnMostrarSenha')
-.addEventListener('click', alternarVisibilidadeSenha)
+.addEventListener('click', () => alternarVisibilidadeSenha('senha', 'icone-olho', 'icone-olho-fechado'))
+
+document
+.getElementById('btnMostrarNovaSenha')
+.addEventListener('click', () => alternarVisibilidadeSenha('novaSenha', 'icone-olho-nova', 'icone-olho-fechado-nova'))
 
 document
 .getElementById('btnEsqueciSenha')
-.addEventListener('click', () => alternarTela(true))
+.addEventListener('click', () => mostrarTela('esqueci'))
 
 document
 .getElementById('btnVoltarLogin')
-.addEventListener('click', () => alternarTela(false))
+.addEventListener('click', () => mostrarTela('login'))
 
 document
 .getElementById('btnEnviarRecuperacao')
 .addEventListener('click', enviarRecuperacaoSenha)
 
-function alternarVisibilidadeSenha(){
+document
+.getElementById('btnSalvarNovaSenha')
+.addEventListener('click', salvarNovaSenha)
 
-  const campo = document.getElementById('senha')
+client.auth.onAuthStateChange((event) => {
+
+  if(event === 'PASSWORD_RECOVERY'){
+    mostrarTela('nova-senha')
+  }
+
+})
+
+function alternarVisibilidadeSenha(idCampo, idIconeAberto, idIconeFechado){
+
+  const campo = document.getElementById(idCampo)
   const mostrando = campo.type === 'text'
 
   campo.type = mostrando ? 'password' : 'text'
 
-  document.getElementById('icone-olho').style.display = mostrando ? 'block' : 'none'
-  document.getElementById('icone-olho-fechado').style.display = mostrando ? 'none' : 'block'
+  document.getElementById(idIconeAberto).style.display = mostrando ? 'block' : 'none'
+  document.getElementById(idIconeFechado).style.display = mostrando ? 'none' : 'block'
 
 }
 
-function alternarTela(mostrarRecuperar){
+function mostrarTela(nome){
 
-  document.getElementById('tela-login').style.display = mostrarRecuperar ? 'none' : 'block'
-  document.getElementById('tela-esqueci').style.display = mostrarRecuperar ? 'block' : 'none'
+  document.getElementById('tela-login').style.display = nome === 'login' ? 'block' : 'none'
+  document.getElementById('tela-esqueci').style.display = nome === 'esqueci' ? 'block' : 'none'
+  document.getElementById('tela-nova-senha').style.display = nome === 'nova-senha' ? 'block' : 'none'
 
 }
 
@@ -187,7 +235,38 @@ async function enviarRecuperacaoSenha(){
   }
 
   alert('Se esse email estiver cadastrado, você vai receber um link para redefinir a senha.')
-  alternarTela(false)
+  mostrarTela('login')
+
+}
+
+async function salvarNovaSenha(){
+
+  const novaSenha =
+  document.getElementById('novaSenha').value
+
+  const confirmarSenha =
+  document.getElementById('confirmarNovaSenha').value
+
+  if(!novaSenha || novaSenha.length < 6){
+    alert('A senha precisa ter pelo menos 6 caracteres.')
+    return
+  }
+
+  if(novaSenha !== confirmarSenha){
+    alert('As senhas não coincidem.')
+    return
+  }
+
+  const { error } =
+  await client.auth.updateUser({ password: novaSenha })
+
+  if(error){
+    alert(error.message)
+    return
+  }
+
+  alert('Senha atualizada com sucesso! Faça login com a nova senha.')
+  window.location.href = '/'
 
 }
 
