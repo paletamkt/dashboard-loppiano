@@ -2,12 +2,23 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function onRequest(context) {
 
-  const supabase = createClient(
-    context.env.SUPABASE_URL,
-    context.env.SUPABASE_SERVICE_ROLE
-  )
+  if (!context.env.SUPABASE_URL || !context.env.SUPABASE_SERVICE_ROLE) {
+
+    return Response.json({
+      erro: 'SUPABASE_URL ou SUPABASE_SERVICE_ROLE não configurados neste ambiente (Cloudflare Pages > Settings > Environment variables).'
+    }, {
+      status: 500
+    })
+
+  }
 
   try {
+
+    const supabase = createClient(
+      context.env.SUPABASE_URL,
+      context.env.SUPABASE_SERVICE_ROLE
+    )
+
 
     const [
       resumoMensal,
