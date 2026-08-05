@@ -7,70 +7,122 @@
 
 <title>Login Dashboard</title>
 
+<link rel="stylesheet" href="./css/style.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
-body{
-  margin:0;
-  background:#111827;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-family:Arial,sans-serif;
-}
-
-.card{
-  width:380px;
-  background:white;
-  padding:30px;
-  border-radius:12px;
-}
-
-h2{
-  margin-top:0;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:12px;
-  box-sizing:border-box;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  cursor:pointer;
-}
-
-</style>
 
 </head>
 
 <body>
 
-<div class="card">
+<div class="auth-shell">
+<div class="auth-card">
 
-<h2>Loppiano Dashboard</h2>
+  <div class="auth-logo">
+    <!-- Para usar a logo real: salve o arquivo em img/logo.png (ou .svg) neste
+         repositório. Assim que o arquivo existir, ele aparece aqui automaticamente. -->
+    <img
+      src="img/logo.png"
+      alt="Loppiano"
+      onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex'"
+    />
+    <div id="logo-fallback" class="auth-logo-fallback">LP</div>
+  </div>
 
-<input
-  id="email"
-  type="email"
-  placeholder="Email"
-/>
+  <div id="tela-login">
 
-<input
-  id="senha"
-  type="password"
-  placeholder="Senha"
-/>
+    <h2>Loppiano Dashboard</h2>
+    <div class="info">Entre com seu email e senha para acessar o painel.</div>
 
-<button id="btnLogin">
-Entrar
-</button>
+    <input
+      id="email"
+      type="email"
+      placeholder="Email"
+      autocomplete="username"
+    />
 
+    <div class="password-field">
+      <input
+        id="senha"
+        type="password"
+        placeholder="Senha"
+        autocomplete="current-password"
+      />
+      <button type="button" id="btnMostrarSenha" class="password-toggle" aria-label="Mostrar senha">
+        <svg id="icone-olho" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="icone-olho-fechado" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.3 21.3 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a21.4 21.4 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+
+    <button id="btnLogin">
+    Entrar
+    </button>
+
+    <button type="button" id="btnEsqueciSenha" class="link-btn">
+      Esqueci minha senha
+    </button>
+
+  </div>
+
+  <div id="tela-esqueci" style="display:none">
+
+    <h2>Recuperar senha</h2>
+    <div class="info">Digite seu email. Vamos enviar um link para redefinir a senha.</div>
+
+    <input
+      id="emailRecuperar"
+      type="email"
+      placeholder="Email"
+      autocomplete="username"
+    />
+
+    <button id="btnEnviarRecuperacao">
+    Enviar link de recuperação
+    </button>
+
+    <button type="button" id="btnVoltarLogin" class="link-btn">
+      Voltar para o login
+    </button>
+
+  </div>
+
+  <div id="tela-nova-senha" style="display:none">
+
+    <h2>Definir nova senha</h2>
+    <div class="info">Digite sua nova senha para acessar o painel.</div>
+
+    <div class="password-field">
+      <input
+        id="novaSenha"
+        type="password"
+        placeholder="Nova senha"
+        autocomplete="new-password"
+      />
+      <button type="button" id="btnMostrarNovaSenha" class="password-toggle" aria-label="Mostrar senha">
+        <svg id="icone-olho-nova" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="icone-olho-fechado-nova" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.3 21.3 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a21.4 21.4 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+
+    <input
+      id="confirmarNovaSenha"
+      type="password"
+      placeholder="Confirmar nova senha"
+      autocomplete="new-password"
+    />
+
+    <button id="btnSalvarNovaSenha">
+    Salvar nova senha
+    </button>
+
+  </div>
+
+  <div class="auth-credit">
+    Desenvolvido por
+    <img src="img/logo-paleta.png" alt="Paleta Food Mkt" onerror="this.style.display='none'">
+    — marketing e tecnologia
+  </div>
+
+</div>
 </div>
 
 <script>
@@ -91,6 +143,58 @@ document
 .getElementById('btnLogin')
 .addEventListener('click', login)
 
+document
+.getElementById('btnMostrarSenha')
+.addEventListener('click', () => alternarVisibilidadeSenha('senha', 'icone-olho', 'icone-olho-fechado'))
+
+document
+.getElementById('btnMostrarNovaSenha')
+.addEventListener('click', () => alternarVisibilidadeSenha('novaSenha', 'icone-olho-nova', 'icone-olho-fechado-nova'))
+
+document
+.getElementById('btnEsqueciSenha')
+.addEventListener('click', () => mostrarTela('esqueci'))
+
+document
+.getElementById('btnVoltarLogin')
+.addEventListener('click', () => mostrarTela('login'))
+
+document
+.getElementById('btnEnviarRecuperacao')
+.addEventListener('click', enviarRecuperacaoSenha)
+
+document
+.getElementById('btnSalvarNovaSenha')
+.addEventListener('click', salvarNovaSenha)
+
+client.auth.onAuthStateChange((event) => {
+
+  if(event === 'PASSWORD_RECOVERY'){
+    mostrarTela('nova-senha')
+  }
+
+})
+
+function alternarVisibilidadeSenha(idCampo, idIconeAberto, idIconeFechado){
+
+  const campo = document.getElementById(idCampo)
+  const mostrando = campo.type === 'text'
+
+  campo.type = mostrando ? 'password' : 'text'
+
+  document.getElementById(idIconeAberto).style.display = mostrando ? 'block' : 'none'
+  document.getElementById(idIconeFechado).style.display = mostrando ? 'none' : 'block'
+
+}
+
+function mostrarTela(nome){
+
+  document.getElementById('tela-login').style.display = nome === 'login' ? 'block' : 'none'
+  document.getElementById('tela-esqueci').style.display = nome === 'esqueci' ? 'block' : 'none'
+  document.getElementById('tela-nova-senha').style.display = nome === 'nova-senha' ? 'block' : 'none'
+
+}
+
 async function login(){
 
   const email =
@@ -99,16 +203,11 @@ async function login(){
   const password =
   document.getElementById('senha').value
 
-  console.log('CLIENTE:')
-  console.log(client)
-
   const resultado =
   await client.auth.signInWithPassword({
     email,
     password
   })
-
-  console.log(resultado)
 
   if(resultado.error){
 
@@ -118,6 +217,62 @@ async function login(){
   }
 
   window.location.href='/'
+
+}
+
+async function enviarRecuperacaoSenha(){
+
+  const email =
+  document.getElementById('emailRecuperar').value
+
+  if(!email){
+    alert('Digite seu email.')
+    return
+  }
+
+  const { error } =
+  await client.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login.html'
+  })
+
+  if(error){
+    alert(error.message)
+    return
+  }
+
+  alert('Se esse email estiver cadastrado, você vai receber um link para redefinir a senha.')
+  mostrarTela('login')
+
+}
+
+async function salvarNovaSenha(){
+
+  const novaSenha =
+  document.getElementById('novaSenha').value
+
+  const confirmarSenha =
+  document.getElementById('confirmarNovaSenha').value
+
+  if(!novaSenha || novaSenha.length < 6){
+    alert('A senha precisa ter pelo menos 6 caracteres.')
+    return
+  }
+
+  if(novaSenha !== confirmarSenha){
+    alert('As senhas não coincidem.')
+    return
+  }
+
+  const { error } =
+  await client.auth.updateUser({ password: novaSenha })
+
+  if(error){
+    alert(error.message)
+    return
+  }
+
+  alert('Senha atualizada com sucesso! Faça login com a nova senha.')
+  window.location.href = '/'
 
 }
 
