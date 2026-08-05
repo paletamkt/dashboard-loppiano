@@ -13,14 +13,18 @@
 <body>
 
 <header class="hdr">
+ <div class="hdr-brand">
+ <img src="img/logo.png" alt="" class="hdr-logo" onerror="this.style.display='none'">
  <div>
  <h1>Loppiano Pizza</h1>
  <p id="hdr-sub">Dashboard Operacional</p>
+ </div>
  </div>
 
  <div class="hdr-actions">
  <select id="periodoGlobal" class="select"></select>
  <span id="status" class="badge">Carregando...</span>
+ <button type="button" class="values-toggle" id="btnOcultarValores" onclick="alternarOcultarValores()">Ocultar valores</button>
  </div>
 
   <button onclick="logout()">
@@ -65,9 +69,15 @@
  </div>
 
  <div id="metas-visao" class="subsection active">
- <div class="kpi-grid">
- <div class="kpi red"><span>Faturamento Real</span><strong id="kpi-fat">—</strong></div>
- <div class="kpi"><span>Meta Total</span><strong id="kpi-meta">—</strong></div>
+ <div class="hero">
+ <div>
+ <div class="hero-lbl">Faturamento Real</div>
+ <div class="hero-num" id="kpi-fat">—</div>
+ </div>
+ <div class="hero-note">Meta do período<br><strong id="kpi-meta">—</strong></div>
+ </div>
+
+ <div class="kpi-grid kpi-grid-2">
  <div class="kpi green"><span>% Meta</span><strong id="kpi-pct">—</strong></div>
  <div class="kpi"><span>Pessoas Reais</span><strong id="kpi-pessoas">—</strong></div>
  </div>
@@ -637,7 +647,7 @@
  <option value="">Comparar com...</option>
  </select>
 
- <select id="selectTamanhoCrescimento" class="select">
+ <select id="selectTamanhoCrescimento" class="select" style="display:none">
  <option value="todos">Todos os Tamanhos</option>
  <option value="GR">GR</option>
  <option value="FM">FM</option>
@@ -645,10 +655,23 @@
  <option value="OUTRO">OUTRO</option>
  </select>
 
- <select id="selectMetricaCrescimento" class="select">
+ <div class="chip-group" data-chips-for="selectTamanhoCrescimento">
+ <button type="button" class="chip on" data-value="todos">Todos os Tamanhos</button>
+ <button type="button" class="chip" data-value="GR">GR</button>
+ <button type="button" class="chip" data-value="FM">FM</button>
+ <button type="button" class="chip" data-value="PQ">PQ</button>
+ <button type="button" class="chip" data-value="OUTRO">OUTRO</button>
+ </div>
+
+ <select id="selectMetricaCrescimento" class="select" style="display:none">
  <option value="quantidade">Quantidade</option>
  <option value="valor_total">Faturamento</option>
  </select>
+
+ <div class="chip-group" data-chips-for="selectMetricaCrescimento">
+ <button type="button" class="chip on" data-value="quantidade">Quantidade</button>
+ <button type="button" class="chip" data-value="valor_total">Faturamento</button>
+ </div>
  </div>
 
  <div class="kpi-grid">
@@ -829,6 +852,15 @@
  </section>
 
 </main>
+
+<footer class="dashboard-footer">
+ <div><b>Loppiano Pizza</b> — Dashboard Operacional</div>
+ <div class="dashboard-footer-credit">
+ Desenvolvido por
+ <img src="img/logo-paleta.png" alt="Paleta Food Mkt" onerror="this.style.display='none'">
+ — marketing e tecnologia
+ </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 

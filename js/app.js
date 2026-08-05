@@ -327,9 +327,20 @@ function destruir(chart) {
  if (chart) chart.destroy()
 }
 
+let valoresOcultos = false
+
+function alternarOcultarValores() {
+ valoresOcultos = !valoresOcultos
+ document.body.classList.toggle('values-hidden', valoresOcultos)
+
+ const botao = $('btnOcultarValores')
+ if (botao) botao.textContent = valoresOcultos ? 'Mostrar valores' : 'Ocultar valores'
+}
+
 async function init() {
  bindTabs()
  bindSubtabsGenericas()
+ bindChipGroups()
  await carregarDados()
 }
 
@@ -348,6 +359,23 @@ function bindTabs() {
 
  const sec = $(`sec-${tab}`)
  if (sec) sec.classList.add('active')
+ })
+ })
+}
+
+function bindChipGroups() {
+ document.querySelectorAll('[data-chips-for]').forEach(grupo => {
+ const select = $(grupo.dataset.chipsFor)
+ if (!select) return
+
+ grupo.querySelectorAll('.chip').forEach(chip => {
+ chip.onclick = () => {
+ grupo.querySelectorAll('.chip').forEach(c => c.classList.remove('on'))
+ chip.classList.add('on')
+
+ select.value = chip.dataset.value
+ select.dispatchEvent(new Event('change'))
+ }
  })
  })
 }
